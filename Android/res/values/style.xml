@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="TabStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/Red</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:paddingTop">5dip</item>
+        <item name="android:paddingBottom">5dip</item>
+        
+    </style>
+    
+    <style name="BasicStyle">
+        <item name="android:background">@color/Beige</item>
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:divider">@color/Black</item>
+        <item name="android:dividerHeight">1dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:paddingBottom">10dip</item>
+    </style>
+    
+    
+</resources>
