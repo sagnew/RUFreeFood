@@ -1,0 +1,16 @@
+{
+    "name": "RUFreeFood",
+    "version": "0.0.0",
+    "description": "Displays all upcoming events on campus that offer free food.",
+    "main": "app.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/sagnew/RUFreeFood.git"
+    },
+    "dependencies": {
+        "express": "*"
+    },
+    "author": "Sam Agnew",
+    "license": "MIT",
+    "readmeFilename": "README.md"
+}
