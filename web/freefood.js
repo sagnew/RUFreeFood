@@ -8,7 +8,11 @@ function FreeFood(){
         path: '/events/getEventsRss.xml'
     }
 
-    var foodWords = ['food', 'pizza']
+    var foodWords = ["food", "appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
+        "candy", "drink", "punch", "pie", "cake", "soda", "chicken", "wing", "burger",
+        "burrito", "shirt", "stuff", "bagel", "coffee", " ice ", "cream", "water", "donut", "beer",
+        "sub", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refresh",
+        "beverage", "cookie", "brownie", "corn", "chips", "soup", "grill", "bbq", "barbecue"]
 
     var containsAny = function(str, list){
         //Determines whether a string contains any of the words in the given list
