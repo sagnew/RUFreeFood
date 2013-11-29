@@ -1,10 +1,36 @@
 <% include header.html %>
 
-<h1>Free food events on campus:</h1>
-<ul id="events">
+<div class="row">
+    <div class="large-12 columns">
+        <h1>Free food events on campus:</h1>
+    </div>
+</div>
+
+<div class="row" id="events">
     <% events.forEach(function(event){ %>
-    <li><%= event.title%> &lt;<%= event.description%>&gt;</li>
+        <div class="row panel">
+
+            <div class="large-12">
+                <h3><b><%= event.title %></b></h3>
+            </div>
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <h4><%= event.description %></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-6 columns">
+                    <h4>When: <%= event.when %></h4>
+                </div>
+                <div class="large-6 columns">
+                    <h4>Where: <%= event.location %></h4>
+                </div>
+            </div>
+
+        </div>
     <% }) %>
-</ul>
+</div>
 
 <% include footer.html %>
