@@ -1,0 +1,10 @@
+<% include header.html %>
+
+<h1>Users</h1>
+<ul id="events">
+    <% events.forEach(function(event){ %>
+    <li><%= event.title%> &lt;<%= event.description%>&gt;</li>
+    <% }) %>
+</ul>
+
+<% include footer.html %>
