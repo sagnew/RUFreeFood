@@ -11,14 +11,19 @@ function printEvents(events){
 }
 
 //Set up ejs for rendering
-app.engine('.html', require('ejs').__express;
+app.engine('.html', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 
 freefood.getFreeFoodEvents(printEvents);
 
 app.get('/', function(req, res){
-    res.render('index', { events: events });
+    freefood.getFreeFoodEvents(function(events){
+        res.render('index', {
+            events: events,
+            title: "Free Food"
+        })
+    });
 });
 
 app.listen(3000);
