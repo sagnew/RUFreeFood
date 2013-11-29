@@ -8,7 +8,8 @@
         "url": "git://github.com/sagnew/RUFreeFood.git"
     },
     "dependencies": {
-        "express": "*"
+        "express": "*",
+        "ejs": "*"
     },
     "author": "Sam Agnew",
     "license": "MIT",
