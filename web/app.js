@@ -14,7 +14,7 @@ function printEvents(events){
 app.engine('.html', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
-app.use(express.static(__dirname + '/static');
+app.use(express.static(__dirname + '/static'));
 
 freefood.getFreeFoodEvents(printEvents);
 
