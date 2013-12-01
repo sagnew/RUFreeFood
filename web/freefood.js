@@ -9,20 +9,21 @@ function FreeFood(){
     }
 
     var foodWords = ["food", "appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
-        "candy", "drink", "punch", "pie", "cake", "soda", "chicken", "wing", "burger",
-        "burrito", "shirt", "stuff", "bagel", "coffee", " ice ", "cream", "water", "donut", "beer",
-        "sub", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refresh",
-        "beverage", "cookie", "brownie", "corn", "chips", "soup", "grill", "bbq", "barbecue"]
+        "candy", "drinks", "punch", "pie", "cake", "soda", "chicken", "wings", "burger",
+        "burrito", "stuff", "bagel", "coffee", " ice ", "cream", "donut", "beer",
+        "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
+        "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"]
 
     var containsAny = function(str, list){
         //Determines whether a string contains any of the words in the given list
+        //Returns the word that the string contains, or null otherwise
         var i;
         for(i = 0; i < list.length; i++){
              if(str.indexOf(list[i]) !== -1){
-                return true;
+                return list[i];
              }
         }
-        return false;
+        return null;
     }
 
     var getFreeFoodEvents = function(callback){
@@ -41,12 +42,14 @@ function FreeFood(){
                    events = events['rss']['channel'][0]['item'];
                    var i;
                    for (i = 0; i < events.length; i++) {
-                        if(containsAny(events[i].description[0].toString(), foodWords)){
+                        foodWord = containsAny(events[i].description[0].toString(), foodWords)
+                        if(foodWord !== null){
                             freeFoodEvent = {
                                 'title': events[i].title,
                                 'description': events[i].description,
                                 'location': events[i]['event:location'],
-                                'when': events[i]['event:beginDateTime']
+                                'when': events[i]['event:beginDateTime'],
+                                'foodWord': foodWord
                             }
                             freefoodevents.push(freeFoodEvent);
                         }
