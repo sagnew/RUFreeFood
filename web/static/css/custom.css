@@ -1,0 +1,10 @@
+body{
+    background-image:url('/imgs/pattern.png');
+}
+
+#logodiv{
+    margin-top: 10px;
+    margin-bottom 10px;
+    padding: 10px;
+    position:relative;
+}
