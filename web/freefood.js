@@ -9,7 +9,7 @@ function FreeFood(){
     }
 
     var foodWords = ["food", "appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
-        "candy", "drinks", "punch", "pie", "cake", "soda", "chicken", "wings", "burger",
+        "candy", "drinks", "punch", " pie ", "pie.",  "cake", "soda", "chicken", "wings", "burger",
         "burrito", "stuff", "bagel", "coffee", " ice ", "cream", "donut", "beer",
         "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
         "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"]
