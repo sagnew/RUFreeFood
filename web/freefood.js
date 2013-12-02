@@ -2,10 +2,16 @@ function FreeFood(){
 
     var http = require('http')
         , xml2js = require('xml2js');
+    var freefoodevents = [];
     var eventsxml = '';
-    var options = {
+    var firstRequest = true;
+    var eventOptions = {
         host: 'ruevents.rutgers.edu',
         path: '/events/getEventsRss.xml'
+    }
+    var studentlifeOptions = {
+        host: "getinvolved.rutgers.edu",
+        path: "/feed.php"
     }
 
     var foodWords = ["appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
@@ -26,37 +32,53 @@ function FreeFood(){
         return null;
     }
 
-    var getFreeFoodEvents = function(callback){
-        var freefoodevents = [];
-        http.get(options, function (response){
-            var completeResponse = '';
-            response.on('data', function(chunk){
-                completeResponse += chunk;
+    var handleRequest = function(response, callback){
+        var completeResponse = '';
+        response.on('data', function(chunk){
+            completeResponse += chunk;
+        });
+        response.on('end', function(){
+            eventsxml = completeResponse;
+            var parser = new xml2js.Parser();
+            var events = '';
+            parser.parseString(eventsxml, function(err, result){
+                events = result;
+                events = events['rss']['channel'][0]['item'];
+                var i;
+                for (i = 0; i < events.length; i++) {
+                     foodWord = containsAny(events[i].description[0].toString(), foodWords)
+                     if(foodWord !== null){
+                         freeFoodEvent = {
+                             'title': events[i].title,
+                             'description': events[i].description,
+                             'location': events[i]['event:location'],
+                             'when': events[i]['event:beginDateTime'],
+                             'foodWord': foodWord
+                         }
+                         if(typeof(freeFoodEvent['location']) === 'undefined'){
+                             // Just in case
+                             freeFoodEvent['location'] = "See description/link"
+                         }
+                         freefoodevents.push(freeFoodEvent);
+                     }
+                }
+                if(firstRequest){
+                    firstRequest = false;
+                    http.get(eventOptions, function (response){
+                        handleRequest(response, callback);
+                    }).on('error', function(e){console.log(e);});
+                } else {
+                    firstRequest = true;
+                    callback(freefoodevents);
+                }
             });
-            response.on('end', function(){
-                eventsxml = completeResponse;
-                var parser = new xml2js.Parser();
-                var events = '';
-                parser.parseString(eventsxml, function(err, result){
-                   events = result;
-                   events = events['rss']['channel'][0]['item'];
-                   var i;
-                   for (i = 0; i < events.length; i++) {
-                        foodWord = containsAny(events[i].description[0].toString(), foodWords)
-                        if(foodWord !== null){
-                            freeFoodEvent = {
-                                'title': events[i].title,
-                                'description': events[i].description,
-                                'location': events[i]['event:location'],
-                                'when': events[i]['event:beginDateTime'],
-                                'foodWord': foodWord
-                            }
-                            freefoodevents.push(freeFoodEvent);
-                        }
-                   }
-                   callback(freefoodevents);
-                });
-            })
+        })
+    }
+
+    var getFreeFoodEvents = function(callback){
+        freefoodevents = [];
+        http.get(studentlifeOptions, function (response){
+            handleRequest(response, callback);
         }).on('error', function(e){console.log(e);});
     }
 
