@@ -53,6 +53,7 @@ function FreeFood(){
                              'description': events[i].description,
                              'location': events[i]['event:location'],
                              'when': events[i]['event:beginDateTime'],
+                             'link': events[i]['link'],
                              'foodWord': foodWord
                          }
                          if(typeof(freeFoodEvent['location']) === 'undefined'){
