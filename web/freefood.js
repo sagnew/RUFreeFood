@@ -1,7 +1,8 @@
 function FreeFood(){
 
     var http = require('http')
-        , xml2js = require('xml2js');
+        , xml2js = require('xml2js')
+        , moment = require('moment');
     var freefoodevents = [];
     var eventsxml = '';
     var firstRequest = true;
@@ -32,6 +33,10 @@ function FreeFood(){
         return null;
     }
 
+    var formatDate = function(time){
+       return moment(time.substring(0, time.length - 4)).format("h:mma ddd MMMM Do, YYYY");
+    }
+
     var handleRequest = function(response, callback){
         var completeResponse = '';
         response.on('data', function(chunk){
@@ -52,7 +57,7 @@ function FreeFood(){
                              'title': events[i].title,
                              'description': events[i].description,
                              'location': events[i]['event:location'],
-                             'when': events[i]['event:beginDateTime'],
+                             'when': formatDate(events[i]['event:beginDateTime'][0]),
                              'link': events[i]['link'],
                              'foodWord': foodWord
                          }
@@ -70,6 +75,11 @@ function FreeFood(){
                     }).on('error', function(e){console.log(e);});
                 } else {
                     firstRequest = true;
+                    freefoodevents.sort(function(event1 ,event2){
+                        a = event1.when;
+                        b = event2.when;
+                        return b<a?-1:b>a?1:0;
+                    });
                     callback(freefoodevents);
                 }
             });
