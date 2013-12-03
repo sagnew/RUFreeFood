@@ -5,8 +5,7 @@ var freefood = require('./freefood')();
 function printEvents(events){
     var i;
     for(i = 0; i < events.length; i++){
-        console.log(events[i]['foodWord'] + "\n");
-        console.log(events[i]['description'][0] + "\n");
+        console.log(events[i]['when'] + "\n");
     }
 }
 
