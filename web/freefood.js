@@ -5,7 +5,7 @@ function FreeFood(){
         , moment = require('moment');
     var freefoodevents = [];
     var eventsxml = '';
-    var firstRequest = true;
+    var firstRequest = true, firstFinished = true;
     var eventOptions = {
         host: 'ruevents.rutgers.edu',
         path: '/events/getEventsRss.xml'
@@ -34,21 +34,25 @@ function FreeFood(){
     }
 
     var formatDate = function(time){
-       return moment(time.substring(0, time.length - 4)).format("h:mma ddd MMMM Do, YYYY");
+        return moment(time.substring(0, time.length - 4)).format("h:mma ddd MMMM Do, YYYY");
     }
 
     var handleRequest = function(response, callback){
         var completeResponse = '';
+
         response.on('data', function(chunk){
             completeResponse += chunk;
         });
+
         response.on('end', function(){
             eventsxml = completeResponse;
             var parser = new xml2js.Parser();
             var events = '';
+
             parser.parseString(eventsxml, function(err, result){
                 events = result;
                 events = events['rss']['channel'][0]['item'];
+
                 var i;
                 for (i = 0; i < events.length; i++) {
                      foodWord = containsAny(events[i].description[0].toString(), foodWords)
@@ -68,22 +72,28 @@ function FreeFood(){
                          freefoodevents.push(freeFoodEvent);
                      }
                 }
-                if(firstRequest){
-                    firstRequest = false;
-                    http.get(eventOptions, function (response){
-                        handleRequest(response, callback);
-                    }).on('error', function(e){console.log(e);});
-                } else {
+
+                if(!firstFinished){
                     firstRequest = true;
+                    firstFinished = true;
                     freefoodevents.sort(function(event1 ,event2){
                         a = event1.when;
                         b = event2.when;
                         return b<a?-1:b>a?1:0;
                     });
                     callback(freefoodevents);
+                }else{
+                    firstFinished = false;
                 }
             });
-        })
+        });
+
+        if(firstRequest){
+            firstRequest = false;
+            http.get(eventOptions, function (response){
+                handleRequest(response, callback);
+            }).on('error', function(e){console.log(e);});
+        }
     }
 
     var getFreeFoodEvents = function(callback){
