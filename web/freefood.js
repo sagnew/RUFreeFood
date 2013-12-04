@@ -17,7 +17,7 @@ function FreeFood(){
 
     var foodWords = ["appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
         "candy", "drinks", "punch", " pie ", " served", " serving", "pie.",  "cake", "soda", "chicken", "wings", "burger",
-        "burrito", "bagel", " ice ", "cream", "donut", "beer",
+        "burrito", "bagel", "poporn", " ice ", "cream", "donut", "beer",
         "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
         "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"]
 
@@ -26,7 +26,7 @@ function FreeFood(){
         //Returns the word that the string contains, or null otherwise
         var i;
         for(i = 0; i < list.length; i++){
-             if(str.indexOf(list[i]) !== -1){
+             if(str.toLowerCase().indexOf(list[i]) !== -1){
                 return list[i];
              }
         }
