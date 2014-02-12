@@ -34,7 +34,7 @@ function FreeFood(){
     }
 
     var formatDate = function(time){
-        return moment(time.substring(0, time.length - 4)).format("h:mma ddd MMMM Do, YYYY");
+        return moment(time.substring(0, time.length - 4));
     }
 
     var handleRequest = function(response, callback){
@@ -61,15 +61,21 @@ function FreeFood(){
                              'title': events[i].title,
                              'description': events[i].description,
                              'location': events[i]['event:location'],
-                             'when': formatDate(events[i]['event:beginDateTime'][0]),
+                             'when': formatDate(events[i]['event:beginDateTime'][0]).format("h:mma ddd MMMM Do, YYYY"),
+                             'moment': formatDate(events[i]['event:beginDateTime'][0]),
                              'link': events[i]['link'],
                              'foodWord': foodWord
                          }
+
                          if(typeof(freeFoodEvent['location']) === 'undefined'){
                              // Just in case
                              freeFoodEvent['location'] = "See description/link"
                          }
-                         freefoodevents.push(freeFoodEvent);
+
+                         if(freeFoodEvent.moment.isAfter()){
+                             //Only insert dates after the current date
+                             freefoodevents.push(freeFoodEvent);
+                         }
                      }
                 }
 
@@ -77,7 +83,7 @@ function FreeFood(){
                     firstRequest = true;
                     firstFinished = true;
                     freefoodevents.sort(function(event1 ,event2){
-                        a = event1.when;
+                        a = event1.moment;
                         b = event2.when;
                         return b<a?-1:b>a?1:0;
                     });
