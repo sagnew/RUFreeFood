@@ -85,8 +85,8 @@ function FreeFood(){
                     firstFinished = true;
                     freefoodevents.sort(function(event1 ,event2){
                         a = event1.moment;
-                        b = event2.when;
-                        return b<a?-1:b>a?1:0;
+                        b = event2.moment;
+                        return b.isAfter(a)?-1:a.isAfter(b)?1:0;
                     });
                     callback(freefoodevents);
                 }else{
