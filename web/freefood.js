@@ -21,12 +21,13 @@ function FreeFood(){
         "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
         "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"]
 
-    var containsAny = function(str, list){
+    //Create a containsAny method for Strings
+    String.prototype.containsAny = function(list){
         //Determines whether a string contains any of the words in the given list
         //Returns the word that the string contains, or null otherwise
         var i;
         for(i = 0; i < list.length; i++){
-             if(str.toLowerCase().indexOf(list[i]) !== -1){
+             if(this.toLowerCase().indexOf(list[i]) !== -1){
                 return list[i];
              }
         }
@@ -55,7 +56,7 @@ function FreeFood(){
 
                 var i;
                 for (i = 0; i < events.length; i++) {
-                     foodWord = containsAny(events[i].description[0].toString(), foodWords)
+                     foodWord = events[i].description[0].toString().containsAny(foodWords)
                      if(foodWord !== null){
                          freeFoodEvent = {
                              'title': events[i].title,
