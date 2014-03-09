@@ -10,7 +10,8 @@
     "dependencies": {
         "express": "*",
         "ejs": "*",
-        "xml2js": "*"
+        "xml2js": "*",
+        "moment": "*"
     },
     "author": "Sam Agnew",
     "license": "MIT",
