@@ -1,25 +1,27 @@
 function FreeFood(){
 
-    var http = require('http')
-        , xml2js = require('xml2js')
-        , moment = require('moment');
-    var freefoodevents = [];
-    var eventsxml = '';
-    var firstRequest = true, firstFinished = true;
-    var eventOptions = {
-        host: 'ruevents.rutgers.edu',
-        path: '/events/getEventsRss.xml'
-    }
-    var studentlifeOptions = {
-        host: "getinvolved.rutgers.edu",
-        path: "/feed.php"
-    }
+    //Required node libraries
+    var http = require('http'),
+        xml2js = require('xml2js'),
+        moment = require('moment'),
+        async = require('async');
 
-    var foodWords = ["appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
-        "candy", "drinks", "punch", " pie ", " served", " serving", "pie.",  "cake", "soda", "chicken", "wings", "burger",
-        "burrito", "bagel", "poporn", " ice ", "cream", "donut", "beer",
-        "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
-        "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"]
+    //"Global" variables
+    var eventOptions = {
+            host: 'ruevents.rutgers.edu',
+            path: '/events/getEventsRss.xml'
+        },
+        studentlifeOptions = {
+            host: "getinvolved.rutgers.edu",
+            path: "/feed.php"
+        },
+        foodWords = [
+            "appetizer", "snack", "pizza", "lunch", "dinner", "breakfast", "meal",
+            "candy", "drinks", "punch", " pie ", " served", " serving", "pie.",  "cake", "soda", "chicken", "wings", "burger",
+            "burrito", "bagel", "poporn", " ice ", "cream", "donut", "beer",
+            "subs", "hoagie", "sandwich", "turkey", "supper", "brunch", "takeout", "refreshment",
+            "beverage", "cookie", "brownie", "chips", "soup", "grill", "bbq", "barbecue"
+        ];
 
     //Create a containsAny method for Strings
     String.prototype.containsAny = function(list){
@@ -32,19 +34,21 @@ function FreeFood(){
              }
         }
         return null;
-    }
+    };
 
     var formatDate = function(time){
         return moment(time.substring(0, time.length - 4));
-    }
+    };
 
-    var handleRequest = function(response, callback){
+    var handleRequest = function(response, cb){
         var completeResponse = '';
+        var freefoodevents = [];
 
         response.on('data', function(chunk){
             completeResponse += chunk;
         });
 
+        var eventsxml = '';
         response.on('end', function(){
             eventsxml = completeResponse;
             var parser = new xml2js.Parser();
@@ -54,8 +58,7 @@ function FreeFood(){
                 events = result;
                 events = events['rss']['channel'][0]['item'];
 
-                var i;
-                for (i = 0; i < events.length; i++) {
+                for (var i = 0; i < events.length; i++) {
                      foodWord = events[i].description[0].toString().containsAny(foodWords)
                      if(foodWord !== null){
                          freeFoodEvent = {
@@ -79,36 +82,43 @@ function FreeFood(){
                          }
                      }
                 }
-
-                if(!firstFinished){
-                    firstRequest = true;
-                    firstFinished = true;
-                    freefoodevents.sort(function(event1 ,event2){
-                        a = event1.moment;
-                        b = event2.moment;
-                        return b.isAfter(a)?-1:a.isAfter(b)?1:0;
-                    });
-                    callback(freefoodevents);
-                }else{
-                    firstFinished = false;
-                }
+                console.log("One response finished");
+                console.log(freefoodevents);
+                cb(null, freefoodevents);
             });
         });
-
-        if(firstRequest){
-            firstRequest = false;
-            http.get(eventOptions, function (response){
-                handleRequest(response, callback);
-            }).on('error', function(e){console.log(e);});
-        }
-    }
+    };
 
     var getFreeFoodEvents = function(callback){
-        freefoodevents = [];
-        http.get(studentlifeOptions, function (response){
-            handleRequest(response, callback);
-        }).on('error', function(e){console.log(e);});
-    }
+
+        async.parallel([
+            function (cb){
+                console.log("First called");
+                http.get(studentlifeOptions, function (response){
+                    handleRequest(response, cb);
+                }).on('error', function(e){console.log(e);});
+            },
+            function (cb){
+                console.log("Second called");
+                http.get(eventOptions, function (response){
+                    handleRequest(response, cb);
+                }).on('error', function(e){console.log(e);});
+            }
+        ],
+        function (err, results){
+            if(err){
+                console.log(err);
+            }
+            results = results[0].concat(results[1]);
+
+            results.sort(function(event1 ,event2){
+                a = event1.moment;
+                b = event2.moment;
+                return b.isAfter(a)?-1:a.isAfter(b)?1:0;
+            });
+            callback(results);
+        });
+    };
 
     return {
         getFreeFoodEvents: getFreeFoodEvents
