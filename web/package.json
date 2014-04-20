@@ -11,6 +11,7 @@
         "express": "*",
         "ejs": "*",
         "xml2js": "*",
+        "async": "*",
         "moment": "*"
     },
     "author": "Sam Agnew",
